@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Total Movie Series - Player</title>
+    <title>Total Movie Series - Auto Streaming</title>
     <!-- Plyr CSS -->
     <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
     <style>
@@ -16,77 +16,89 @@
         body {
             background-color: #0d1117;
             color: #ffffff;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
             padding: 20px;
         }
         .header {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
         .header h1 {
             color: #e50914;
-            font-size: 28px;
+            font-size: 30px;
             margin-bottom: 5px;
         }
         .header p {
             color: #8b949e;
             font-size: 14px;
         }
-        .container {
-            width: 100%;
-            max-width: 900px;
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 20px;
+        }
+        @media (max-width: 900px) {
+            .main-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        .player-section {
             background: #161b22;
             border-radius: 12px;
             padding: 20px;
             box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            height: fit-content;
         }
         .player-wrapper {
             width: 100%;
             border-radius: 8px;
             overflow: hidden;
             background: #000;
+            margin-bottom: 15px;
         }
-        .controls-input {
-            margin-top: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
+        .movie-list-section {
+            background: #161b22;
+            border-radius: 12px;
+            padding: 20px;
+            max-height: 600px;
+            overflow-y: auto;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
         }
-        .input-group {
-            display: flex;
-            gap: 10px;
+        .movie-list-section h3 {
+            margin-bottom: 15px;
+            color: #e50914;
+            border-bottom: 1px solid #30363d;
+            padding-bottom: 8px;
         }
-        input[type="text"], input[type="number"] {
+        .movie-item {
+            background: #21262d;
             padding: 12px;
             border-radius: 6px;
-            border: 1px solid #30363d;
-            background: #0d1117;
-            color: #fff;
-            font-size: 14px;
-            outline: none;
-        }
-        input[type="text"] { flex: 2; }
-        input[type="number"] { flex: 1; }
-        button {
-            padding: 12px 20px;
-            background-color: #e50914;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-weight: bold;
+            margin-bottom: 10px;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: background 0.3s, transform 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        button:hover {
-            background-color: #b80710;
+        .movie-item:hover {
+            background: #30363d;
+            transform: translateX(4px);
         }
-        @media (max-width: 600px) {
-            .input-group {
-                flex-direction: column;
-            }
+        .movie-title {
+            font-size: 14px;
+            font-weight: 500;
+            word-break: break-all;
+            padding-right: 10px;
+        }
+        .play-btn-tag {
+            background: #e50914;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            white-space: nowrap;
         }
     </style>
 </head>
@@ -94,24 +106,25 @@
 
     <div class="header">
         <h1>Total Movie Series</h1>
-        <p>টেলিগ্রাম ভিডিও স্ট্রিমিং প্লেয়ার</p>
+        <p>টেলিগ্রাম চ্যানেল থেকে অটো-সিলেক্টেড মুভি স্ট্রিমিং অ্যাপ</p>
     </div>
 
-    <div class="container">
-        <!-- Video Player -->
-        <div class="player-wrapper">
-            <video id="player" playsinline controls>
-                <source id="videoSource" src="" type="video/mp4" />
-            </video>
+    <div class="main-container">
+        <!-- Video Player Section -->
+        <div class="player-section">
+            <div class="player-wrapper">
+                <video id="player" playsinline controls>
+                    <source id="videoSource" src="" type="video/mp4" />
+                </video>
+            </div>
+            <h3 id="currentMovieTitle" style="font-size: 15px; color: #fff; margin-top: 10px;">প্লে করার জন্য লিস্ট থেকে যেকোনো মুভিতে ক্লিক করুন</h3>
         </div>
 
-        <!-- Dynamic Video Controller -->
-        <div class="controls-input">
-            <h3>ভিডিও চালান (Manual Test)</h3>
-            <div class="input-group">
-                <input type="text" id="channelInput" placeholder="টেলিগ্রাম চ্যানেল ইউজারনেম (e.g. my_channel)" />
-                <input type="number" id="msgIdInput" placeholder="মেসেজ আইডি (e.g. 10)" />
-                <button onclick="playVideo()">প্লে করুন</button>
+        <!-- Movie List Section -->
+        <div class="movie-list-section">
+            <h3>চ্যানেলের মুভি লিস্ট</h3>
+            <div id="movieListContainer">
+                <p style="color: #8b949e; font-size: 14px;">চ্যানেল থেকে মুভি লোড হচ্ছে...</p>
             </div>
         </div>
     </div>
@@ -120,34 +133,56 @@
     <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
     <script>
         const BACKEND_URL = "https://total-movie-backend.onrender.com";
+        const CHANNEL_USERNAME = "total_movie_series";
+
         const player = new Plyr('#player', {
             controls: ['play-large', 'play', 'progress', 'current-time', 'duration', 'mute', 'volume', 'fullscreen']
         });
 
-        function playVideo() {
-            const channel = document.getElementById('channelInput').value.trim().replace('@', '');
-            const msgId = document.getElementById('msgIdInput').value.trim();
+        async function fetchMovieList() {
+            const container = document.getElementById('movieListContainer');
+            try {
+                const response = await fetch(`${BACKEND_URL}/api/movies/${CHANNEL_USERNAME}`);
+                const movies = await response.json();
 
-            if (!channel || !msgId) {
-                alert('দয়া করে চ্যানেল ইউজারনেম এবং মেসেজ আইডি দুটিই দিন!');
-                return;
+                if (movies.error) {
+                    container.innerHTML = `<p style="color: #e50914; font-size: 14px;">ত্রুটি: ${movies.error}</p>`;
+                    return;
+                }
+
+                if (movies.length === 0) {
+                    container.innerHTML = `<p style="color: #8b949e; font-size: 14px;">এই চ্যানেলে কোনো ভিডিও পাওয়া যায়নি!</p>`;
+                    return;
+                }
+
+                container.innerHTML = '';
+                movies.forEach(movie => {
+                    const item = document.createElement('div');
+                    item.className = 'movie-item';
+                    item.innerHTML = `
+                        <span class="movie-title">${movie.title}</span>
+                        <span class="play-btn-tag">প্লে করুন</span>
+                    `;
+                    item.onclick = () => playMovie(movie.id, movie.title);
+                    container.appendChild(item);
+                });
+            } catch (err) {
+                container.innerHTML = `<p style="color: #e50914; font-size: 14px;">সার্ভার কানেক্ট করতে সমস্যা হচ্ছে!</p>`;
             }
+        }
 
-            const streamUrl = `${BACKEND_URL}/stream/${channel}/${msgId}`;
+        function playMovie(msgId, title) {
+            document.getElementById('currentMovieTitle').innerText = "প্লে হচ্ছে: " + title;
+            const streamUrl = `${BACKEND_URL}/stream/${CHANNEL_USERNAME}/${msgId}`;
             
-            // Set new video source
             player.source = {
                 type: 'video',
-                sources: [
-                    {
-                        src: streamUrl,
-                        type: 'video/mp4',
-                    },
-                ],
+                sources: [{ src: streamUrl, type: 'video/mp4' }],
             };
-
             player.play();
         }
+
+        fetchMovieList();
     </script>
 </body>
 </html>
