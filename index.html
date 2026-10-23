@@ -3,119 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Total Movie Series - Professional Movie Box</title>
+    <title>NETFLIX - Total Movie Series</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
         }
         body {
-            background-color: #080c14;
+            background-color: #141414;
             color: #ffffff;
-            padding: 20px;
+            padding: 0;
+            overflow-x: hidden;
         }
-        .header {
-            text-align: center;
-            margin-bottom: 25px;
-            border-bottom: 1px solid #1f2937;
-            padding-bottom: 15px;
+        /* Netflix Navbar */
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 40px;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.9), rgba(0,0,0,0));
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
         }
-        .header h1 {
-            color: #e50914;
-            font-size: 32px;
-            font-weight: 700;
-            letter-spacing: 1px;
-            margin-bottom: 5px;
+        .logo {
+            color: #E50914;
+            font-size: 28px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            text-transform: uppercase;
         }
-        .header p {
-            color: #9ca3af;
+        .nav-title {
+            color: #e5e7eb;
             font-size: 14px;
+            font-weight: 500;
         }
-        .main-layout {
-            max-width: 1200px;
-            margin: 0 auto;
+
+        .container {
+            max-width: 1400px;
+            margin: 90px auto 40px auto;
+            padding: 0 20px;
         }
-        /* Video Player Section */
+
+        /* Netflix Hero Player */
         .player-container {
-            background: #111827;
-            border-radius: 14px;
+            background: #000;
+            border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-            border: 1px solid #1f2937;
-            margin-bottom: 30px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.9);
+            border: 1px solid #262626;
+            margin-bottom: 40px;
         }
         video {
             width: 100%;
-            max-height: 480px;
+            max-height: 520px;
             background: #000;
             display: block;
         }
         .now-playing {
-            padding: 15px 20px;
-            background: #1f2937;
-            font-size: 15px;
+            padding: 18px 25px;
+            background: #1f1f1f;
+            font-size: 16px;
             font-weight: 600;
-            color: #f3f4f6;
+            color: #fff;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            border-top: 1px solid #374151;
+            border-top: 1px solid #333;
         }
         .now-playing span {
-            color: #e50914;
+            color: #E50914;
         }
-        /* Section Titles */
+
+        /* Section Headings */
         .section-title {
-            font-size: 20px;
-            color: #ffffff;
-            border-left: 5px solid #e50914;
-            padding-left: 12px;
-            margin: 25px 0 15px 0;
-            font-weight: 600;
+            font-size: 22px;
+            color: #fff;
+            margin: 30px 0 15px 0;
+            font-weight: 700;
+            letter-spacing: 0.5px;
         }
-        /* Movie Grid & Box Style */
+
+        /* Movie Row / Grid */
         .movie-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
             gap: 20px;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
         }
         .movie-box {
-            background: #111827;
-            border-radius: 12px;
+            background: #1f1f1f;
+            border-radius: 6px;
             overflow: hidden;
             cursor: pointer;
-            transition: all 0.3s ease;
-            border: 1px solid #1f2937;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #333;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            position: relative;
         }
         .movie-box:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 12px 25px rgba(229, 9, 20, 0.35);
-            border-color: #e50914;
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px rgba(229, 9, 20, 0.4);
+            border-color: #E50914;
+            z-index: 10;
         }
         .movie-poster {
             width: 100%;
-            height: 140px;
-            background: linear-gradient(135deg, #1f2937, #0b0f19);
+            height: 150px;
+            background: linear-gradient(135deg, #262626, #0f0f0f);
             display: flex;
             align-items: center;
             justify-content: center;
             position: relative;
-            color: #e50914;
-            font-size: 42px;
+            color: #E50914;
+            font-size: 45px;
         }
         .play-overlay {
             position: absolute;
             background: rgba(229, 9, 20, 0.9);
             color: #fff;
-            width: 45px;
-            height: 45px;
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -123,7 +136,7 @@
             opacity: 0;
             transition: opacity 0.3s ease, transform 0.3s ease;
             transform: scale(0.8);
-            font-size: 18px;
+            font-size: 20px;
         }
         .movie-box:hover .play-overlay {
             opacity: 1;
@@ -131,7 +144,7 @@
         }
         .movie-info {
             padding: 12px;
-            font-size: 14px;
+            font-size: 13px;
             color: #e5e7eb;
             line-height: 1.4;
             word-break: break-word;
@@ -140,66 +153,68 @@
         }
         .movie-footer {
             padding: 8px 12px;
-            background: #1f2937;
+            background: #181818;
             text-align: center;
             font-size: 12px;
-            color: #f87171;
+            color: #E50914;
             font-weight: 700;
-            letter-spacing: 0.5px;
         }
         .loading {
             text-align: center;
             grid-column: 1 / -1;
             padding: 40px;
             color: #9ca3af;
-            font-size: 15px;
+            font-size: 16px;
         }
         .empty-history {
-            color: #6b7280;
-            font-size: 13px;
+            color: #777;
+            font-size: 14px;
             font-style: italic;
             grid-column: 1 / -1;
             padding: 10px 0;
+        }
+
+        @media (max-width: 768px) {
+            .navbar { padding: 15px 20px; }
+            .logo { font-size: 22px; }
         }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <h1>Total Movie Series</h1>
-        <p>প্রিমিয়াম মুভি বক্স ও অটো স্ট্রিমিং পোর্টাল</p>
+    <!-- Netflix Header -->
+    <div class="navbar">
+        <div class="logo">NETFLIX</div>
+        <div class="nav-title">Total Movie Series</div>
     </div>
 
-    <div class="main-layout">
-        <!-- Video Player Section -->
+    <div class="container">
+        <!-- Hero Video Player -->
         <div class="player-container">
-            <video id="videoPlayer" controls autoplay playsinline>
-                <source id="videoSource" src="" type="video/mp4">
+            <video id="videoPlayer" controls autoplay playsinline preload="metadata">
                 আপনার ব্রাউজার ভিডিও ট্যাগ সাপোর্ট করছে না।
             </video>
             <div class="now-playing">
-                <span id="currentTitle">প্লে করার জন্য নিচের যেকোনো মুভি বক্সে ক্লিক করুন</span>
+                <span id="currentTitle">প্লে করার জন্য নিচের যেকোনো মুভি সিলেক্ট করুন</span>
             </div>
         </div>
 
-        <!-- Watch History Section -->
-        <h3 class="section-title">⏱️ সম্প্রতি দেখা মুভি (Watch History)</h3>
+        <!-- Watch History Row -->
+        <h3 class="section-title">⏱️ কন্টিনিউ ওয়াচিং (Continue Watching)</h3>
         <div class="movie-grid" id="historyGrid">
             <div class="empty-history" id="emptyHistoryMsg">এখনো কোনো মুভি দেখা হয়নি।</div>
         </div>
 
-        <!-- All Movies Box Section -->
-        <h3 class="section-title">🎬 সকল মুভি ও সিরিজ বক্স</h3>
+        <!-- All Movies Row -->
+        <h3 class="section-title">🔥 ট্রেন্ডিং ও সকল মুভি ও সিরিজ</h3>
         <div class="movie-grid" id="movieGrid">
-            <div class="loading">মুভি বক্স লোড হচ্ছে, দয়া করে অপেক্ষা করুন...</div>
+            <div class="loading">মুভি লোড হচ্ছে, দয়া করে অপেক্ষা করুন...</div>
         </div>
     </div>
 
     <script>
         const BACKEND_URL = "https://total-movie-backend.onrender.com";
         const CHANNEL_USERNAME = "total_movie_series";
-
-        let allMovies = [];
 
         async function loadMovies() {
             const grid = document.getElementById('movieGrid');
@@ -208,7 +223,7 @@
                 const movies = await response.json();
 
                 if (movies.error) {
-                    grid.innerHTML = `<div class="loading" style="color:#f87171;">ত্রুটি: ${movies.error}</div>`;
+                    grid.innerHTML = `<div class="loading" style="color:#e50914;">ত্রুটি: ${movies.error}</div>`;
                     return;
                 }
 
@@ -217,11 +232,10 @@
                     return;
                 }
 
-                allMovies = movies;
                 renderMovieList(movies, grid);
                 renderHistory();
             } catch (err) {
-                grid.innerHTML = `<div class="loading" style="color:#f87171;">সার্ভার কানেক্ট করতে সমস্যা হচ্ছে!</div>`;
+                grid.innerHTML = `<div class="loading" style="color:#e50914;">সার্ভার কানেক্ট করতে সমস্যা হচ্ছে!</div>`;
             }
         }
 
@@ -238,49 +252,48 @@
             box.className = 'movie-box';
             box.innerHTML = `
                 <div class="movie-poster">
-                    🎥
+                    🎬
                     <div class="play-overlay">▶</div>
                 </div>
                 <div class="movie-info">${movie.title}</div>
-                <div class="movie-footer">▶ এখনই প্লে করুন</div>
+                <div class="movie-footer">▶ প্লে করুন</div>
             `;
             box.onclick = () => playMovie(movie.id, movie.title);
             return box;
         }
 
         function playMovie(msgId, title) {
-            document.getElementById('currentTitleinnerHTML').innerHTML = `প্লে হচ্ছে: <span>${title}</span>`;
+            document.getElementById('currentTitle').innerHTML = `প্লে হচ্ছে: <span>${title}</span>`;
             const video = document.getElementById('videoPlayer');
-            const source = document.getElementById('videoSource');
             
-            source.src = `${BACKEND_URL}/stream/${CHANNEL_USERNAME}/${msgId}`;
+            const streamUrl = `${BACKEND_URL}/stream/${CHANNEL_USERNAME}/${msgId}`;
+            
+            video.src = streamUrl;
             video.load();
-            video.play().catch(e => console.log("Auto-play prevented:", e));
             
-            // Save to Watch History in LocalStorage
+            video.play().catch(e => {
+                console.log("Auto-play restricted:", e);
+            });
+            
             saveToHistory(msgId, title);
-
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function saveToHistory(msgId, title) {
-            let history = JSON.parse(localStorage.getItem('movie_history') || '[]');
-            // Remove if already exists to prevent duplicates
+            let history = JSON.parse(localStorage.getItem('netflix_history') || '[]');
             history = history.filter(item => item.id !== msgId);
-            // Add to front
             history.unshift({ id: msgId, title: title });
-            // Keep max 8 items
             if (history.length > 8) history.pop();
-            localStorage.setItem('movie_history', JSON.stringify(history));
+            localStorage.setItem('netflix_history', JSON.stringify(history));
             renderHistory();
         }
 
         function renderHistory() {
             const historyGrid = document.getElementById('historyGrid');
-            let history = JSON.parse(localStorage.getItem('movie_history') || '[]');
+            let history = JSON.parse(localStorage.getItem('netflix_history') || '[]');
 
             if (history.length === 0) {
-                historyGrid.innerHTML = `<div class="empty-history" id="emptyHistoryMsg">এখনো কোনো মুভি দেখা হয়নি। নিচের বক্স থেকে মুভি সিলেক্ট করুন।</div>`;
+                historyGrid.innerHTML = `<div class="empty-history" id="emptyHistoryMsg">আপনার হিস্ট্রি খালি। নিচের লিস্ট থেকে মুভি দেখতে শুরু করুন।</div>`;
                 return;
             }
 
